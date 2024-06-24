@@ -373,7 +373,14 @@ public class EppoClient
 
         try
         {
-            if (_configurationStore.TryGetBandit(variation, out Bandit? bandit) && bandit != null)
+            var isBanditVariation = _configurationStore.GetBanditFlags().TryGetBanditKey(flagKey, variation, out string? banditKey);
+            if (!isBanditVariation || banditKey == null) 
+            {
+                Logger.Error($"[Eppo SDK] Error Expected Bandit {variation} not found, returning variation only");
+                return new(variation);
+            }
+
+            if (_configurationStore.TryGetBandit(banditKey, out Bandit? bandit) && bandit != null)
             {
                 var result = _banditEvaluator.EvaluateBandit(
                     flagKey,

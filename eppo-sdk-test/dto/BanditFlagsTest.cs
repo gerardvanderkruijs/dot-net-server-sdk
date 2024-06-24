@@ -30,4 +30,37 @@ public class BanditFlagsTest
             That(banditFlags.IsBanditFlag("flagKey"), Is.True);
         });
     }
+
+    [Test]
+    public void ShouldFindBanditByFlagAndVariation()
+    {
+        var banditFlags = new BanditFlags()
+        {
+            // Typical `BanditVariationDto` values where `variation` is duplicated across the VariationValue, VariationKey and BanditKey fields.
+            ["variation"] = new BanditVariation[] {new("variation", "banditFlagKey", "variation", "variation")},
+
+            ["banditKey"] = new BanditVariation[] {new("banditKey", "flagKey", "variationKey", "variationValue")}
+        };
+
+        // Will match
+        var result1 = banditFlags.TryGetBanditKey("banditFlagKey","variation", out string? bandit1);
+        var result2 = banditFlags.TryGetBanditKey("flagKey","variationValue", out string? bandit2);
+
+        // Will not match (has to match variationValue)
+        var noResult = banditFlags.TryGetBanditKey("flagKey","banditKey", out string? banditNoMatch);
+
+        Multiple(() =>
+        {
+            That(result1, Is.True);
+            That(bandit1, Is.Not.Null);
+            That(bandit1, Is.EqualTo("variation"));
+
+            That(result2, Is.True);
+            That(bandit2, Is.Not.Null);
+            That(bandit2, Is.EqualTo("banditKey"));
+
+            That(noResult, Is.False);
+            That(banditNoMatch, Is.Null);
+        });
+    }
 }
