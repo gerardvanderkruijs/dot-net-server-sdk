@@ -224,7 +224,7 @@ public class EppoClient
 
             _client?._fetchExperimentsTask.Dispose();
 
-            var fetchExperimentsTask = new FetchExperimentsTask(configurationStore, Constants.TIME_INTERVAL_IN_MILLIS,
+            var fetchExperimentsTask = new FetchExperimentsTask(configurationStore, eppoClientConfig.FetchTimeInterval, 
                 Constants.JITTER_INTERVAL_IN_MILLIS);
             fetchExperimentsTask.Run();
             _client = new EppoClient(configurationStore, eppoClientConfig, fetchExperimentsTask);

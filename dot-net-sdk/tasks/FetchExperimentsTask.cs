@@ -25,6 +25,7 @@ public class FetchExperimentsTask : IDisposable
                        rnd.Next(1, unchecked((int)JitterTimeIntervalInMillis));
         timer.Change(nextTick, Timeout.Infinite);
         _configurationStore.LoadConfiguration();
+        
     }
 
     public void Dispose()

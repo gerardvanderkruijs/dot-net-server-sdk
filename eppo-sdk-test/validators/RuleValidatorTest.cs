@@ -1,6 +1,7 @@
 using eppo_sdk.dto;
 using eppo_sdk.validators;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework.Legacy;
 
 namespace eppo_sdk_test.validators;
 
@@ -10,10 +11,8 @@ public class RuleValidatorTest
     [Test]
     public void ShouldConvertToString()
     {
-
         var someJson = @"{""foo"":""bar"",""bar"":""baz""}"; // The ToString will serialize objects without any indenting.
         var jObj = JObject.Parse(someJson);
-
 
         var values = new List<Tuple<object, string>> (){
             new(true, "true"),
@@ -128,7 +127,7 @@ public class RuleValidatorTest
         AddRegexConditionToRule(rule , false); // Use the NOT_MATCHES operator
         rules.Add(rule);
 
-        var subjectAttributes = new Subject { { "match", null } };
+        var subjectAttributes = new Subject { { "match", null! } };
 
         Assert.That(RuleValidator.FindMatchingRule(subjectAttributes, rules), Is.Null);
     }
@@ -206,7 +205,7 @@ public class RuleValidatorTest
         AddIsNullCondition(rule, true);
         rules.Add(rule);
 
-        var subjectAttributes = new Subject { { "isnull", null } };
+        var subjectAttributes = new Subject { { "isnull", null! } };
 
         Assert.That(RuleValidator.FindMatchingRule(subjectAttributes, rules), Is.EqualTo(rule));
     }
@@ -219,7 +218,7 @@ public class RuleValidatorTest
         AddIsNullCondition(rule, true);
         rules.Add(rule);
 
-        var subjectAttributes = new Subject { { "isnull", null } };
+        var subjectAttributes = new Subject { { "isnull", null! } };
 
         Assert.That(RuleValidator.FindMatchingRule(subjectAttributes, rules), Is.EqualTo(rule));
     }
@@ -272,7 +271,7 @@ public class RuleValidatorTest
         AddIsNullCondition(rule, false);
         rules.Add(rule);
 
-        var subjectAttributes = new Subject { { "isnull", null } };
+        var subjectAttributes = new Subject { { "isnull", null! } };
 
         Assert.That(RuleValidator.FindMatchingRule(subjectAttributes, rules), Is.Null);
     }
@@ -394,9 +393,9 @@ public class RuleValidatorTest
 
         Assert.Multiple(() =>
             {
-                Assert.NotNull(result);
-                Assert.That(result.Variation.Key, Is.EqualTo("music"));
-                Assert.That(result.Variation.Value, Is.EqualTo("rockandroll"));
+                ClassicAssert.NotNull(result);
+                Assert.That(result?.Variation.Key, Is.EqualTo("music"));
+                Assert.That(result?.Variation.Value, Is.EqualTo("rockandroll"));
             }
         );
     }
@@ -405,7 +404,7 @@ public class RuleValidatorTest
     public void DisabledFlag_ReturnsNull()
     {
         var flag = new Flag("disabled", false, new List<Allocation>(), EppoValueType.BOOLEAN, new Dictionary<string, Variation>(), TotalShards);
-        Assert.Null(RuleValidator.EvaluateFlag(flag, SubjectKey, new Subject()));
+        ClassicAssert.Null(RuleValidator.EvaluateFlag(flag, SubjectKey, new Subject()));
     }
 
     [Test]
@@ -425,14 +424,14 @@ public class RuleValidatorTest
             new Dictionary<string, Variation>() { { matchVariation.Key, matchVariation } },
             TotalShards);
 
-        Assert.Null(RuleValidator.EvaluateFlag(flag, SubjectKey, subject));
+        ClassicAssert.Null(RuleValidator.EvaluateFlag(flag, SubjectKey, subject));
     }
 
     [Test]
     public void FlagWithoutAllocations_ReturnsNull()
     {
         var flag = new Flag("no_allocs", true, new List<Allocation>(), EppoValueType.BOOLEAN, new Dictionary<string, Variation>(), TotalShards);
-        Assert.Null(RuleValidator.EvaluateFlag(flag, SubjectKey, subject));
+        ClassicAssert.Null(RuleValidator.EvaluateFlag(flag, SubjectKey, subject));
     }
 
     [Test]
@@ -450,7 +449,7 @@ public class RuleValidatorTest
 
         var result = RuleValidator.EvaluateFlag(flag, SubjectKey, subject);
 
-        Assert.NotNull(result);
+        ClassicAssert.NotNull(result);
         Assert.That(result.Variation.Value, Is.EqualTo("bar"));
     }
 

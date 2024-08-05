@@ -5,6 +5,7 @@ using eppo_sdk.dto.bandit;
 using eppo_sdk.logger;
 using Moq;
 using Newtonsoft.Json;
+using NUnit.Framework.Legacy;
 using WireMock.Matchers;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -88,6 +89,7 @@ public class BanditClientTest
     public void TearDown()
     {
         mockServer?.Stop();
+        mockServer?.Dispose();
     }
 
     private static string GetMockBanditConfig() => GetMockConfig(BANDIT_CONFIG_FILE);
@@ -201,8 +203,8 @@ public class BanditClientTest
             That(banditLog.FlagKey, Is.EqualTo("banner_bandit_flag_uk_only"));
             That(banditLog.BanditKey, Is.EqualTo("banner_bandit"));
             That(banditLog.SubjectKey, Is.EqualTo(subjectKey));
-            GreaterOrEqual(banditLog.OptimalityGap, 0);
-            GreaterOrEqual(banditLog.ActionProbability, 0);
+            ClassicAssert.GreaterOrEqual(banditLog.OptimalityGap!, 0);
+            ClassicAssert.GreaterOrEqual(banditLog.ActionProbability!, 0);
 
 
             That(result.Action, Is.Not.Null);
@@ -275,8 +277,8 @@ public class BanditClientTest
             That(banditLog.FlagKey, Is.EqualTo("banner_bandit_flag_uk_only"));
             That(banditLog.BanditKey, Is.EqualTo("banner_bandit"));
             That(banditLog.SubjectKey, Is.EqualTo(subjectKey));
-            GreaterOrEqual(banditLog.OptimalityGap, 0);
-            GreaterOrEqual(banditLog.ActionProbability, 0);
+            ClassicAssert.GreaterOrEqual(banditLog.OptimalityGap!, 0);
+            ClassicAssert.GreaterOrEqual(banditLog.ActionProbability!, 0);
 
 
             That(result.Action, Is.Not.Null);

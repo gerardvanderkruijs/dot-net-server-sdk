@@ -26,7 +26,7 @@ public class ContextAttributesTest
             {"referralUser","true"},
             {"favouriteColour","green"}
         };
-        var actual = ContextAttributes.FromDict("context", attrs);
+        var actual = ContextAttributes.FromDict("context", attrs!);
         Assert.Multiple(() =>
         {
             Assert.That(actual.GetNumeric(), Is.EquivalentTo(expectedNumeric));
@@ -45,7 +45,7 @@ public class ContextAttributesTest
     public void Add_InvalidType_ExceptionContainsKeyAndValue()
     {
         var contextAttributes = new ContextAttributes("test_key");
-        object invalidValue = new object();
+        var invalidValue = new object();
 
         var exception = Assert.Throws<InvalidAttributeTypeException>(() => contextAttributes.Add("key1", invalidValue));
         Assert.Multiple(() =>

@@ -1,7 +1,6 @@
 using System.Net;
 using eppo_sdk;
 using eppo_sdk.dto;
-using eppo_sdk.dto.bandit;
 using eppo_sdk.logger;
 using Moq;
 using Newtonsoft.Json;
@@ -48,6 +47,7 @@ public class EppoClientTest
     public void TearDown()
     {
         _mockServer?.Stop();
+        _mockServer?.Dispose();
     }
 
     [TearDown]
@@ -58,7 +58,7 @@ public class EppoClientTest
 
     private static string GetMockFlagConfig()
     {
-        var filePath = Path.Combine(new DirectoryInfo(Environment.CurrentDirectory).Parent?.Parent?.Parent?.FullName,
+        var filePath = Path.Combine(new DirectoryInfo(Environment.CurrentDirectory).Parent?.Parent?.Parent?.FullName!,
             "files/ufc/flags-v1.json");
         using var sr = new StreamReader(filePath);
         return sr.ReadToEnd();

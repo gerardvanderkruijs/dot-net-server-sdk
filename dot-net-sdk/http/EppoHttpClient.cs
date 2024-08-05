@@ -1,5 +1,4 @@
 using System.Net;
-using eppo_sdk.dto;
 using RestSharp;
 using RestSharp.Serializers.NewtonsoftJson;
 
@@ -55,7 +54,7 @@ public class EppoHttpClient
 
         var request = new RestRequest
         {
-            Timeout = _requestTimeOutMillis
+            Timeout = TimeSpan.FromMilliseconds(_requestTimeOutMillis)
         };
 
         parameters.ToList().ForEach(x => request.AddParameter(new QueryParameter(x.Key, x.Value)));
